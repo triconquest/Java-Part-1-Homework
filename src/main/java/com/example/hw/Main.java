@@ -43,7 +43,7 @@ public class Main {
         };
         engine.drive();
 
-        // anonymous 3 replacing the CarChecker
+        // lambda 3 replacing the CarChecker
         Vehicle checker = () -> System.out.println("Inspecting the car... looks good!");
         checker.drive();
 
