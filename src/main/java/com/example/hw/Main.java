@@ -3,63 +3,52 @@ package com.example.hw;
 import com.google.gson.Gson;
 
 public class Main {
+
+    interface Vehicle{
+        void drive();
+    }
+
     public static void main(String[] args) {
-        // static nested class example
-        Car car = new Car("Ford", 2021);
         Gson gson = new Gson();
 
-        System.out.println("Static nested class JSON: " + gson.toJson(car));
+        // anonymous class 1, replacing Car
+        Vehicle car = new Vehicle() {
+            final String brand = "Ford";
+            final int year = 2021;
 
-        // inner class
-        Car.Engine engine = car.new Engine("V8");
-        System.out.println("Inner class:  Engine type - " + engine.getType());
-
-        // local class example
-        class CarChecker{
-            void Inspect(Car c)
-            {
-                System.out.println("Checking car: " + c.brand + " (" + c.year + ")");
-            }
-        }
-        CarChecker checker = new CarChecker();
-        checker.Inspect(car);
-
-        // anonymous class example
-        Vehicle electricVehicle = new Vehicle() {
             @Override
-            public void Drive() {
-                System.out.println("Driving an electric vehicle!");
+            public void drive()
+            {
+                System.out.println("Driving " + brand + " (" + year + ")");
+            }
+
+            @Override
+            public String toString()
+            {
+                return "{ \"brand\": \"" + brand + "\", \"year\": " + year + " }";
             }
         };
-        electricVehicle.Drive();
-    }
 
-    // static nested class
-    static class Car {
-        String brand;
-        int year;
-        Car(String brand, int year)
-        {
-            this.brand = brand;
-            this.year = year;
-        }
+        System.out.println("Car JSON: " + gson.toJson(car.toString()));
+        car.drive();
 
-        // non-static inner class
-        class Engine
-        {
-            private String type;
+        // anonymous 2, replacing Engine
+        Vehicle engine = new Vehicle() {
+            final String type = "V8";
 
-            Engine(String type) { this.type = type; }
-
-            public String getType()
-            {
-                return type;
+            @Override
+            public void drive() {
+                System.out.println("Engine running: " + type);
             }
-        }
-    }
+        };
+        engine.drive();
 
-    interface Vehicle
-    {
-        void Drive();
+        // anonymous 3 replacing the CarChecker
+        Vehicle checker = () -> System.out.println("Inspecting the car... looks good!");
+        checker.drive();
+
+        // lambda expression
+        Vehicle electricVehicle = () -> System.out.println("Driving an electric vehicle silently (lambda version)");
+        electricVehicle.drive();
     }
 }
